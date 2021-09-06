@@ -7,14 +7,15 @@ import java.util.Stack;
 
 public class GameStateManager {
 
-    private Stack<State> states;
+    private final Stack<State> states;
 
-    public GameStateManager() {
-        this.states = new Stack<State>();
+    public GameStateManager(Stack<State> states) {
+        this.states = states;
     }
 
     public void update(float dt){
-        states.peek().update(dt);
+        State currentState = states.peek();
+        currentState.update(dt);
     }
 
     public void render(SpriteBatch spriteBatch){
@@ -23,10 +24,6 @@ public class GameStateManager {
 
     public void shapeRender(ShapeRenderer shapeRenderer){
         states.peek().shapeRender(shapeRenderer);
-    }
-
-    public void renderGrid(ShapeRenderer shapeRenderer){
-        states.peek().renderGrid(shapeRenderer);
     }
 
     public void push(State state) {

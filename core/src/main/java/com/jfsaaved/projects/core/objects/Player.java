@@ -42,6 +42,10 @@ public class Player {
         shapeRenderer.rect(position.x, position.y, rectangle.width, rectangle.height);
     }
 
+    private void updateMovement(float dt) {
+
+    }
+
     private void updateInput(float dt) {
         boolean pressedButton = false;
 

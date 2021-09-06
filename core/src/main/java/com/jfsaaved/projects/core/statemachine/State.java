@@ -8,12 +8,14 @@ import com.jfsaaved.projects.core.Main;
 
 public abstract class State {
 
-    protected GameStateManager gameStateManager;
     protected OrthographicCamera orthographicCamera;
     protected Vector3 mouse;
 
-    protected State (GameStateManager gameStateManager) {
-        this.gameStateManager = gameStateManager;
+    protected State () {
+
+    }
+
+    protected void stateInit() {
         this.orthographicCamera = new OrthographicCamera();
         this.mouse = new Vector3();
         this.updateCam((int) Main.WIDTH, (int) Main.HEIGHT, Main.WIDTH/2, Main.HEIGHT/2);
@@ -23,17 +25,6 @@ public abstract class State {
         orthographicCamera.setToOrtho(false, width, height);
         orthographicCamera.position.set(x, y, 0);
         orthographicCamera.update();
-    }
-
-    protected void renderGrid(ShapeRenderer shapeRenderer){
-        shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        for(int i = 0; i < 4; i ++) {
-            for(int j = 0; j < 4; j++) {
-                shapeRenderer.rect(i * 320, j * 192, 320, 192);
-            }
-        }
-        shapeRenderer.end();
     }
 
     protected abstract void update(float dt);

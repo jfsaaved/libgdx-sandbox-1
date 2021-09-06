@@ -9,8 +9,8 @@ public class PlayState extends State{
 
     private Player player;
 
-    public PlayState(GameStateManager gameStateManager){
-        super(gameStateManager);
+    public PlayState(){
+        stateInit();
         player = new Player(Main.images.getAtlas("assets").findRegion("player"),
                 (int) Main.WIDTH/2,
                 (int) Main.HEIGHT/2, 36, 54);
@@ -34,6 +34,11 @@ public class PlayState extends State{
         shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         player.shapeRender(shapeRenderer);
+        for(int i = 0; i < 4; i ++) {
+            for(int j = 0; j < 4; j++) {
+                shapeRenderer.rect(i * 320, j * 192, 320, 192);
+            }
+        }
         shapeRenderer.end();
     }
 

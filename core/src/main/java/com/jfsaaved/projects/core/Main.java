@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.jfsaaved.projects.core.assets.Images;
 import com.jfsaaved.projects.core.statemachine.GameStateManager;
 import com.jfsaaved.projects.core.statemachine.PlayState;
+import com.jfsaaved.projects.core.statemachine.State;
+
+import java.util.Stack;
 
 public class Main implements ApplicationListener {
 
@@ -21,11 +24,11 @@ public class Main implements ApplicationListener {
 
 	@Override
 	public void create () {
-		gameStateManager = new GameStateManager();
+		gameStateManager = new GameStateManager(new Stack<State>());
 		spriteBatch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		images = new Images("pack1.pack","assets");
-		gameStateManager.push(new PlayState(gameStateManager));
+		gameStateManager.push(new PlayState());
 	}
 
 	@Override
@@ -40,7 +43,6 @@ public class Main implements ApplicationListener {
 		gameStateManager.update(Gdx.graphics.getDeltaTime());
 		gameStateManager.render(spriteBatch);
 		gameStateManager.shapeRender(shapeRenderer);
-		gameStateManager.renderGrid(shapeRenderer);
 	}
 
 	@Override
