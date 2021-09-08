@@ -9,13 +9,14 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.jfsaaved.projects.core.handlers.SpriteHandler;
 
+import static com.jfsaaved.projects.core.Main.HEIGHT;
 import static com.jfsaaved.projects.core.Main.WIDTH;
 
 public class Player {
 
-    private static float ACCELERATION = 300f;
-    private static float DAMP = 0.90f;
-    private static float MAX_VEL = 300f;
+    private static float MAX_VEL = 3f;
+    private static float MAX_JUMP_SPEED = 5f;
+    private static float GRAVITY = -10f;
 
     private SpriteHandler spriteHandler;
 
@@ -24,6 +25,15 @@ public class Player {
     private Vector2 velocity;
 
     private Rectangle rectangle;
+
+    private PlayerState playerState;
+
+    private boolean preventLeft;
+    private boolean preventRight;
+
+    private enum PlayerState{
+        JUMPING, IDLE, WALKING;
+    }
 
     public Player(TextureRegion textureRegion, int x, int y, int width, int height) {
         position = new Vector2();
@@ -35,6 +45,8 @@ public class Player {
         rectangle = new Rectangle();
         rectangle.width = width;
         rectangle.height = height;
+
+        playerState = PlayerState.IDLE;
 
         spriteHandler = new SpriteHandler()
                 .handleStandingSprite(textureRegion, width, height, 4)
@@ -56,8 +68,8 @@ public class Player {
     }
 
     private void updateMovement(float dt) {
-        velocity.add(acceleration.x * dt, acceleration.y);
-        if (acceleration.x == 0) velocity.x *= DAMP;
+
+        velocity.y += GRAVITY * dt;
 
         if (velocity.x > MAX_VEL) {
             velocity.x = MAX_VEL;
@@ -66,7 +78,14 @@ public class Player {
             velocity.x = -MAX_VEL;
         }
 
-        position.add(velocity.x * dt, velocity.y);
+        position.add(velocity.x, velocity.y);
+
+        if (position.y < HEIGHT/2) {
+            position.y = HEIGHT/2;
+            if (playerState.equals(PlayerState.JUMPING)) {
+                playerState = PlayerState.IDLE;
+            }
+        }
 
         if (position.x < 0) {
             position.x = 0;
@@ -81,28 +100,45 @@ public class Player {
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             pressedButton = true;
-            spriteHandler.setFlip(true);
+            spriteHandler.setFlip(false);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             pressedButton = true;
             spriteHandler.setFlip(false);
         }
 
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            pressedButton = true;
+            if (!playerState.equals(PlayerState.JUMPING)) {
+                playerState = PlayerState.JUMPING;
+                velocity.y = MAX_JUMP_SPEED;
+            }
+        }
+
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             pressedButton = true;
-            spriteHandler.setAnimationState(SpriteHandler.AnimationState.WALKING);
-            acceleration.x = -ACCELERATION;
+            if (!playerState.equals(PlayerState.JUMPING)) {
+                playerState = PlayerState.WALKING;
+                spriteHandler.setAnimationState(SpriteHandler.AnimationState.WALKING);
+                velocity.x = -MAX_VEL;
+            }
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             pressedButton = true;
-            spriteHandler.setAnimationState(SpriteHandler.AnimationState.WALKING);
-            acceleration.x = ACCELERATION;
+            if (!playerState.equals(PlayerState.JUMPING)) {
+                playerState = PlayerState.WALKING;
+                spriteHandler.setAnimationState(SpriteHandler.AnimationState.WALKING);
+                velocity.x = MAX_VEL;
+            }
         }
 
         if(!pressedButton) {
+            if (!playerState.equals(PlayerState.JUMPING)) {
+                playerState = PlayerState.IDLE;
+            }
             spriteHandler.setAnimationState(SpriteHandler.AnimationState.STANDING);
-            acceleration.x = 0;
+            if(!playerState.equals(PlayerState.JUMPING)) velocity.x = 0;
         }
 
     }

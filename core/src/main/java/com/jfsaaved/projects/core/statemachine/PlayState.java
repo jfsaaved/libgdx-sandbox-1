@@ -13,7 +13,7 @@ public class PlayState extends State{
         stateInit();
         player = new Player(Main.images.getAtlas("assets").findRegion("player"),
                 (int) Main.WIDTH/2,
-                (int) Main.HEIGHT/2, 36, 54);
+                (int) Main.HEIGHT/2 + 50, 36, 54);
     }
 
     @Override
