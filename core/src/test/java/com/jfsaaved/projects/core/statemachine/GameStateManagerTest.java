@@ -26,9 +26,10 @@ class GameStateManagerTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void testUpdateMethodPeeks() {
         Float dt = MathUtils.random();
-        Mockito.when(mockStateStack.peek()).thenReturn(new MockState());
+        MockState mockState = new MockState();
+        Mockito.when(mockStateStack.peek()).thenReturn(mockState);
         gameStateManager.update(dt);
         Mockito.verify(mockStateStack,Mockito.atLeast(1)).peek();
     }
