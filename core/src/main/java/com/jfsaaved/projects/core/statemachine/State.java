@@ -22,8 +22,8 @@ public abstract class State {
     }
 
     protected void updateCam(int width, int height, float x, float y){
-        orthographicCamera.setToOrtho(false, width, height);
-        orthographicCamera.position.set(x, y, 0);
+        orthographicCamera.setToOrtho(false, width/2, height/2);
+        orthographicCamera.position.set(x, y + 150, 0);
         orthographicCamera.update();
     }
 

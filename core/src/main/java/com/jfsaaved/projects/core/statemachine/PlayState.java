@@ -11,9 +11,11 @@ public class PlayState extends State{
 
     public PlayState(){
         stateInit();
-        player = new Player(Main.images.getAtlas("assets").findRegion("player"),
+        player = new Player(Main.images.findRegion("standing/Kim"),
                 (int) Main.WIDTH/2,
-                (int) Main.HEIGHT/2 + 50, 36, 54);
+                (int) Main.HEIGHT/2 + 50, 64, 112);
+        player.setAttackSheet(Main.imagesAttack.findRegion("test-attack/Kim"));
+        player.setJumpSheet(Main.imagesJump.findRegion("jump/Kim"));
     }
 
     @Override
