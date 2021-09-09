@@ -3,7 +3,9 @@ package com.jfsaaved.projects.core;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.jfsaaved.projects.core.assets.Images;
 import com.jfsaaved.projects.core.statemachine.GameStateManager;
@@ -20,14 +22,18 @@ public class Main implements ApplicationListener {
 	public static GameStateManager gameStateManager;
 	public static SpriteBatch spriteBatch;
 	public static ShapeRenderer shapeRenderer;
-	public static Images images;
+	public static TextureAtlas images;
+	public static TextureAtlas imagesAttack;
+	public static TextureAtlas imagesJump;
 
 	@Override
 	public void create () {
 		gameStateManager = new GameStateManager(new Stack<State>());
 		spriteBatch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
-		images = new Images("pack1.pack","assets");
+		images = new TextureAtlas("kim.txt");
+		imagesAttack = new TextureAtlas("kim-attack.txt");
+		imagesJump = new TextureAtlas("kim-jump.txt");
 		gameStateManager.push(new PlayState());
 	}
 
