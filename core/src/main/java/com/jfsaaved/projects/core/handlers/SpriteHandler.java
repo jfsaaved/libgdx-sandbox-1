@@ -6,7 +6,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class SpriteHandler {
 
     public enum AnimationState{
-        STANDING, WALKING_BACKWARD, WALKING_FORWARD, TEST_ATTACK, JUMP_START_UP, JUMP_MID1, JUMP_APEX1, JUMP_APEX2, JUMP_APEX3, JUMP_MID2
+        STANDING, WALKING_BACKWARD, WALKING_FORWARD, TEST_ATTACK,
+        JUMP_START_UP, JUMP_MID1, JUMP_APEX1, JUMP_APEX2, JUMP_APEX3, JUMP_MID2,
+        JUMP_F_1, JUMP_F_2, JUMP_F_3, JUMP_F_4,
+        JUMP_B_1, JUMP_B_2, JUMP_B_3, JUMP_B_4, JUMP_B_5,
+        PUNCH_01_1, PUNCH_01_2
     }
 
     private Sprite[] standingSprite;
@@ -14,6 +18,9 @@ public class SpriteHandler {
     private Sprite[] walkingForwardSprite;
     private Sprite[] textAttackSprite;
     private Sprite[] jumpingStandingSprite;
+    private Sprite[] jumpingForwardSprite;
+    private Sprite[] jumpingBackwardSprite;
+    private Sprite[] punch01Sprite;
 
     private int currentFrame;
     protected int currentDelay;
@@ -58,6 +65,27 @@ public class SpriteHandler {
         return this;
     }
 
+    public SpriteHandler handleForwardJumpSprite(TextureRegion textureRegion, int width, int height, int frames) {
+        jumpingForwardSprite = new Sprite[frames];
+        for(int col = 0; col < frames; col++)
+            jumpingForwardSprite[col] = new Sprite(textureRegion, width * col, 0, width, height);
+        return this;
+    }
+
+    public SpriteHandler handleBackwardJumpSprite(TextureRegion textureRegion, int width, int height, int frames) {
+        jumpingBackwardSprite = new Sprite[frames];
+        for(int col = 0; col < frames; col++)
+            jumpingBackwardSprite[col] = new Sprite(textureRegion, width * col, 0, width, height);
+        return this;
+    }
+
+    public SpriteHandler handlePunch01Sprite(TextureRegion textureRegion, int width, int height, int frames) {
+        punch01Sprite = new Sprite[frames];
+        for(int col = 0; col < frames; col++)
+            punch01Sprite[col] = new Sprite(textureRegion, width * (col), 0, width, height);
+        return this;
+    }
+
     public SpriteHandler handleTestAttackSprite(TextureRegion textureRegion, int width, int height, int frames) {
         textAttackSprite = new Sprite[frames];
         for(int col = 0; col < frames; col++)
@@ -67,16 +95,27 @@ public class SpriteHandler {
 
     public void setAnimationState(AnimationState animationState){
         this.animationState = animationState;
-        if(animationState == AnimationState.WALKING_BACKWARD)
-            activeSprite = walkingBackwardSprite;
-        else if(animationState == AnimationState.WALKING_FORWARD)
-            activeSprite = walkingForwardSprite;
-        else if(animationState == AnimationState.STANDING)
-            activeSprite = standingSprite;
-        else if(animationState == AnimationState.TEST_ATTACK)
-            activeSprite = textAttackSprite;
-        else if(animationState == AnimationState.JUMP_MID1)
-            activeSprite = jumpingStandingSprite;
+        if(animationState == AnimationState.WALKING_BACKWARD) activeSprite = walkingBackwardSprite;
+        else if(animationState == AnimationState.WALKING_FORWARD) activeSprite = walkingForwardSprite;
+        else if(animationState == AnimationState.STANDING) activeSprite = standingSprite;
+        else if(animationState == AnimationState.TEST_ATTACK) activeSprite = textAttackSprite;
+        else if(animationState == AnimationState.JUMP_START_UP) activeSprite = jumpingStandingSprite;
+        else if(animationState == AnimationState.JUMP_MID1) activeSprite = jumpingStandingSprite;
+        else if(animationState == AnimationState.JUMP_APEX1) activeSprite = jumpingStandingSprite;
+        else if(animationState == AnimationState.JUMP_APEX2) activeSprite = jumpingStandingSprite;
+        else if(animationState == AnimationState.JUMP_APEX3) activeSprite = jumpingStandingSprite;
+        else if(animationState == AnimationState.JUMP_MID2) activeSprite = jumpingStandingSprite;
+        else if(animationState == AnimationState.JUMP_F_1) activeSprite = jumpingForwardSprite;
+        else if(animationState == AnimationState.JUMP_F_2) activeSprite = jumpingForwardSprite;
+        else if(animationState == AnimationState.JUMP_F_3) activeSprite = jumpingForwardSprite;
+        else if(animationState == AnimationState.JUMP_F_4) activeSprite = jumpingForwardSprite;
+        else if(animationState == AnimationState.JUMP_B_1) activeSprite = jumpingBackwardSprite;
+        else if(animationState == AnimationState.JUMP_B_2) activeSprite = jumpingBackwardSprite;
+        else if(animationState == AnimationState.JUMP_B_3) activeSprite = jumpingBackwardSprite;
+        else if(animationState == AnimationState.JUMP_B_4) activeSprite = jumpingBackwardSprite;
+        else if(animationState == AnimationState.JUMP_B_5) activeSprite = jumpingBackwardSprite;
+        else if(animationState == AnimationState.PUNCH_01_1) activeSprite = punch01Sprite;
+        else if(animationState == AnimationState.PUNCH_01_2) activeSprite = punch01Sprite;
     }
 
     public AnimationState getAnimationState(){
@@ -96,34 +135,42 @@ public class SpriteHandler {
     }
 
     public void update(float dt){
-        final int COL_FRAME_DELAY_MAX = 8;
+
+        // Walking & Standing
+        final int COL_FRAME_DELAY_MAX = 3;
         final int COL_FRAME_DELAY_MULTIPLIER = 70;
-
-        if(activeSprite == null)
-            activeSprite = standingSprite;
-
+        if(activeSprite == null) activeSprite = standingSprite;
         currentDelay -= (dt * COL_FRAME_DELAY_MULTIPLIER);
-
         if(currentDelay < 0) {
             currentFrame++;
             currentDelay = COL_FRAME_DELAY_MAX;
         }
+        if(currentFrame > activeSprite.length-1) currentFrame = 0;
 
-        if(currentFrame > activeSprite.length-1)
-            currentFrame = 0;
+        // Standard Jump
+        if(animationState.equals(AnimationState.JUMP_START_UP)) currentFrame = 0;
+        if(animationState.equals(AnimationState.JUMP_MID1)) currentFrame = 1;
+        if(animationState.equals(AnimationState.JUMP_APEX1)) currentFrame = 2;
+        if(animationState.equals(AnimationState.JUMP_APEX2)) currentFrame = 3;
+        if(animationState.equals(AnimationState.JUMP_APEX3)) currentFrame = 4;
+        if(animationState.equals(AnimationState.JUMP_MID2)) currentFrame = 5;
 
-        if(animationState.equals(AnimationState.JUMP_START_UP))
-            currentFrame = 0;
-        if(animationState.equals(AnimationState.JUMP_MID1))
-            currentFrame = 1;
-        if(animationState.equals(AnimationState.JUMP_APEX1))
-            currentFrame = 2;
-        if(animationState.equals(AnimationState.JUMP_APEX2))
-            currentFrame = 3;
-        if(animationState.equals(AnimationState.JUMP_APEX3))
-            currentFrame = 4;
-        if(animationState.equals(AnimationState.JUMP_MID2))
-            currentFrame = 5;
+        // Forward Jump
+        if(animationState.equals(AnimationState.JUMP_F_1)) currentFrame = 0;
+        if(animationState.equals(AnimationState.JUMP_F_2)) currentFrame = 1;
+        if(animationState.equals(AnimationState.JUMP_F_3)) currentFrame = 2;
+        if(animationState.equals(AnimationState.JUMP_F_4)) currentFrame = 3;
+
+        // Backwards Jump
+        if(animationState.equals(AnimationState.JUMP_B_1)) currentFrame = 0;
+        if(animationState.equals(AnimationState.JUMP_B_2)) currentFrame = 1;
+        if(animationState.equals(AnimationState.JUMP_B_3)) currentFrame = 2;
+        if(animationState.equals(AnimationState.JUMP_B_4)) currentFrame = 3;
+        if(animationState.equals(AnimationState.JUMP_B_5)) currentFrame = 4;
+
+        // Punch 01
+        if(animationState.equals(AnimationState.PUNCH_01_1)) currentFrame = 0;
+        if(animationState.equals(AnimationState.PUNCH_01_2)) currentFrame = 1;
 
         activeSprite[currentFrame].setFlip(flip, false);
     }

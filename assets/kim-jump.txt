@@ -1,0 +1,47 @@
+kim-jump.png
+size: 384, 144
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+jump/Kim
+  rotate: false
+  xy: 0, 0
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: 23
+jump/Kim
+  rotate: false
+  xy: 64, 0
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: 24
+jump/Kim
+  rotate: false
+  xy: 128, 0
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: 25
+jump/Kim
+  rotate: false
+  xy: 192, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 26
+jump/Kim
+  rotate: false
+  xy: 256, 0
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: 27
+jump/Kim
+  rotate: false
+  xy: 320, 0
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: 28
