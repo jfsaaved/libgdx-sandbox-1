@@ -1,0 +1,33 @@
+kim-f-jump.png
+size: 384, 80
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Kim
+  rotate: false
+  xy: 0, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: 29
+Kim
+  rotate: false
+  xy: 96, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 30
+Kim
+  rotate: false
+  xy: 192, 0
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: 31
+Kim
+  rotate: false
+  xy: 288, 0
+  size: 96, 80
+  orig: 96, 80
+  offset: 0, 0
+  index: 32

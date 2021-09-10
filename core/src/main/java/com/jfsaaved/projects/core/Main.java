@@ -25,6 +25,9 @@ public class Main implements ApplicationListener {
 	public static TextureAtlas images;
 	public static TextureAtlas imagesAttack;
 	public static TextureAtlas imagesJump;
+	public static TextureAtlas imagesJumpForward;
+	public static TextureAtlas imagesJumpBackward;
+	public static TextureAtlas imagesPunch01;
 
 	@Override
 	public void create () {
@@ -34,6 +37,9 @@ public class Main implements ApplicationListener {
 		images = new TextureAtlas("kim.txt");
 		imagesAttack = new TextureAtlas("kim-attack.txt");
 		imagesJump = new TextureAtlas("kim-jump.txt");
+		imagesJumpForward = new TextureAtlas("kim-f-jump.txt");
+		imagesJumpBackward = new TextureAtlas("kim-b-jump.txt");
+		imagesPunch01 = new TextureAtlas("kim-punch-01.txt");
 		gameStateManager.push(new PlayState());
 	}
 
