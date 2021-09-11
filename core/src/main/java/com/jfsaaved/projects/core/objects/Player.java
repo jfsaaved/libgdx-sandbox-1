@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.jfsaaved.projects.core.handlers.SpriteHandler;
 
+import javax.xml.soap.Text;
+
 import static com.jfsaaved.projects.core.Main.HEIGHT;
 import static com.jfsaaved.projects.core.Main.WIDTH;
 
@@ -18,9 +20,10 @@ public class Player {
     private static float MAX_JUMP_SPEED = 7f;
     private static float GRAVITY = -15f;
 
-    // Punch 01 Frames
+    // Punch Frames
     private static int PUNCH_01_FRAMES = 8;
-    private static int PUNCH_01_FRAMES_CD = PUNCH_01_FRAMES + 5;
+    private static int PUNCH_02_FRAMES = 16;
+    private static int KICK_01_FRAMES = 24;
 
     private PlayerState playerState;
     private ActiveEvent activeEvent;
@@ -31,14 +34,19 @@ public class Player {
     private final Rectangle rectangle;
 
     private boolean pressedButton;
-    private int punch01Frames = PUNCH_01_FRAMES_CD;
+    private int punch01Frames = 0;
+    private int punch02Frames = 0;
+    private int kick01Frames = 0;
+
+    private float drawingX;
+    private float drawingY;
 
     private enum PlayerState{
         JUMPING, IDLE, WALKING, RECOVERY, ACTIVE, BLOCKING, START_UP
     }
 
     private enum ActiveEvent {
-        NONE, PUNCH_01
+        NONE, PUNCH_01, PUNCH_02, KICK_01
     }
 
     public Player(TextureRegion textureRegion, int x, int y, int width, int height) {
@@ -54,10 +62,15 @@ public class Player {
         playerState = PlayerState.IDLE;
         activeEvent = ActiveEvent.NONE;
 
+        drawingX = position.x;
+        drawingY = position.y;
+
         spriteHandler = new SpriteHandler()
                 .handleStandingSprite(textureRegion, width, height, 11)
                 .handleWalkingBackwardSprite(textureRegion, width, height, 6)
                 .handleWalkingForwardSprite(textureRegion, width, height, 6);
+
+        spriteHandler.setFlip(true);
     }
 
     public void setAttackSheet(TextureRegion textureRegion) {
@@ -80,24 +93,31 @@ public class Player {
         spriteHandler.handlePunch01Sprite(textureRegion, 80, 112, 2);
     }
 
+    public void setPunch02Sheet(TextureRegion textureRegion) {
+        spriteHandler.handlePunch02Sprite(textureRegion, 128, 112, 4);
+    }
+
+    public void setKick01Sheet(TextureRegion textureRegion) {
+        spriteHandler.handleKick01Sprite(textureRegion,112,112,6);
+    }
+
     public void update(float dt){
+        refreshDrawing();
         updateInput(dt);
         handlePunch01();
+        handlePunch02();
+        handleKick01();
         handleJumpAnimation();
         spriteHandler.update(dt);
         updateMovement(dt);
     }
 
+    private void refreshDrawing() {
+        drawingX = position.x;
+        drawingY = position.y;
+    }
+
     public void render(SpriteBatch spriteBatch) {
-        float drawingX = position.x;
-        float drawingY = position.y;
-        if(playerState.equals(PlayerState.JUMPING)) {
-            if(velocity.x > 0) {
-                drawingY = drawingY + 30;
-            } else if(velocity.x < 0) {
-                drawingY = drawingY - 10;
-            }
-        }
         spriteBatch.draw(spriteHandler.getActiveSprite(), drawingX, drawingY);
     }
 
@@ -108,6 +128,7 @@ public class Player {
     private void handleJumpAnimation() {
         if(playerState.equals(PlayerState.JUMPING)) {
             if(velocity.x > 0) {
+                drawingY = drawingY + 30;
                 if(velocity.y <= 7 && velocity.y > 5) spriteHandler.setAnimationState(SpriteHandler.AnimationState.JUMP_F_1);
                 if(velocity.y <= 5 && velocity.y > 2) spriteHandler.setAnimationState(SpriteHandler.AnimationState.JUMP_F_2);
                 if(velocity.y <= 2 && velocity.y > -1) spriteHandler.setAnimationState(SpriteHandler.AnimationState.JUMP_F_3);
@@ -115,6 +136,7 @@ public class Player {
                 if(velocity.y <= -4 && velocity.y >= -7) spriteHandler.setAnimationState(SpriteHandler.AnimationState.JUMP_MID2);
             }
             else if(velocity.x < 0) {
+                drawingY = drawingY - 10;
                 if(velocity.y <= 7 && velocity.y > 6) spriteHandler.setAnimationState(SpriteHandler.AnimationState.JUMP_B_1);
                 if(velocity.y <= 6 && velocity.y > 5) spriteHandler.setAnimationState(SpriteHandler.AnimationState.JUMP_B_2);
                 if(velocity.y <= 5 && velocity.y > 4) spriteHandler.setAnimationState(SpriteHandler.AnimationState.JUMP_B_3);
@@ -137,11 +159,14 @@ public class Player {
             if(punch01Frames <= PUNCH_01_FRAMES/2)  {
                 spriteHandler.setAnimationState(SpriteHandler.AnimationState.PUNCH_01_1);
                 playerState = PlayerState.START_UP;
+                drawingX -= 8;
+                drawingY -= 1;
             }
             if(punch01Frames > PUNCH_01_FRAMES/2) {
                 spriteHandler.setAnimationState(SpriteHandler.AnimationState.PUNCH_01_2);
-                position.x += 1;
                 playerState = PlayerState.ACTIVE;
+                drawingX += 7;
+                drawingY -= 1;
             }
             punch01Frames++;
             if(punch01Frames > PUNCH_01_FRAMES) {
@@ -149,9 +174,98 @@ public class Player {
                 playerState = PlayerState.IDLE;
             }
         } else {
-            punch01Frames++;
-            if(punch01Frames > PUNCH_01_FRAMES_CD) {
-                punch01Frames = PUNCH_01_FRAMES_CD;
+            if(punch01Frames <= PUNCH_01_FRAMES) {
+                punch01Frames++;
+            }
+        }
+    }
+
+    private void handlePunch02() {
+        if(activeEvent.equals(ActiveEvent.PUNCH_02)) {
+            if(punch02Frames <= 4)  {
+                spriteHandler.setAnimationState(SpriteHandler.AnimationState.PUNCH_01_1);
+                playerState = PlayerState.START_UP;
+                drawingX -= 7;
+            }
+            else if(punch02Frames <= 8) {
+                spriteHandler.setAnimationState(SpriteHandler.AnimationState.PUNCH_02_2);
+                playerState = PlayerState.START_UP;
+                drawingY -= 15;
+                drawingX -= 37;
+            }
+            else if(punch02Frames <= 12) {
+                spriteHandler.setAnimationState(SpriteHandler.AnimationState.PUNCH_02_3);
+                playerState = PlayerState.ACTIVE;
+                drawingY -= 15;
+                drawingX += 6;
+                position.x += 1;
+            }
+            else if(punch02Frames <= 16) {
+                spriteHandler.setAnimationState(SpriteHandler.AnimationState.PUNCH_02_4);
+                playerState = PlayerState.ACTIVE;
+                drawingY -= 17;
+                drawingX -= 11;
+            }
+            punch02Frames++;
+            if(punch02Frames > PUNCH_02_FRAMES) {
+                activeEvent = ActiveEvent.NONE;
+                playerState = PlayerState.IDLE;
+            }
+        } else {
+            if(punch02Frames <= PUNCH_02_FRAMES) {
+                punch02Frames++;
+            }
+        }
+    }
+
+    private void handleKick01() {
+        if(activeEvent.equals(ActiveEvent.KICK_01)) {
+            if(kick01Frames <= 4)  {
+                spriteHandler.setAnimationState(SpriteHandler.AnimationState.KICK_01_1);
+                playerState = PlayerState.START_UP;
+                drawingX -= 47;
+                drawingY += 1;
+            }
+            else if(kick01Frames <= 8) {
+                spriteHandler.setAnimationState(SpriteHandler.AnimationState.KICK_01_2);
+                playerState = PlayerState.ACTIVE;
+                drawingX -= 58;
+                drawingY -= 2;
+            }
+            else if(kick01Frames <= 12) {
+                spriteHandler.setAnimationState(SpriteHandler.AnimationState.KICK_01_3);
+                playerState = PlayerState.ACTIVE;
+                drawingX -= 25;
+                drawingY -= 2;
+                position.x += 1;
+            }
+            else if(kick01Frames <= 16) {
+                spriteHandler.setAnimationState(SpriteHandler.AnimationState.KICK_01_4);
+                playerState = PlayerState.ACTIVE;
+                drawingX -= 25;
+                drawingY -= 2;
+                position.x += 0.5;
+            }
+            else if(kick01Frames <= 20) {
+                spriteHandler.setAnimationState(SpriteHandler.AnimationState.KICK_01_5);
+                playerState = PlayerState.ACTIVE;
+                drawingX -= 40;
+                drawingY -= 2;
+            }
+            else if(kick01Frames <= 24) {
+                spriteHandler.setAnimationState(SpriteHandler.AnimationState.KICK_01_6);
+                playerState = PlayerState.ACTIVE;
+                drawingX -= 27;
+                drawingY -= 2;
+            }
+            kick01Frames++;
+            if(kick01Frames > KICK_01_FRAMES) {
+                activeEvent = ActiveEvent.NONE;
+                playerState = PlayerState.IDLE;
+            }
+        } else {
+            if(kick01Frames <= KICK_01_FRAMES) {
+                kick01Frames++;
             }
         }
     }
@@ -192,21 +306,34 @@ public class Player {
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             pressedButton = true;
-            spriteHandler.setFlip(true);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             pressedButton = true;
-            spriteHandler.setFlip(true);
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
             pressedButton = true;
-            if (!playerState.equals(PlayerState.JUMPING)
-                    && !playerState.equals(PlayerState.START_UP)
-                    && !playerState.equals(PlayerState.ACTIVE)
-                    && punch01Frames >= PUNCH_01_FRAMES_CD) {
+            if (playerState.equals(PlayerState.IDLE)) {
                 punch01Frames = 0;
                 activeEvent = ActiveEvent.PUNCH_01;
+                playerState = PlayerState.START_UP;
+            }
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            pressedButton = true;
+            if (playerState.equals(PlayerState.IDLE)) {
+                punch02Frames = 0;
+                activeEvent = ActiveEvent.PUNCH_02;
+                playerState = PlayerState.START_UP;
+            }
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            pressedButton = true;
+            if (playerState.equals(PlayerState.IDLE)) {
+                kick01Frames = 0;
+                activeEvent = ActiveEvent.KICK_01;
                 playerState = PlayerState.START_UP;
             }
         }

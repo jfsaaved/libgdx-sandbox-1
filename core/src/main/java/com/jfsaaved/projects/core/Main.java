@@ -2,6 +2,7 @@ package com.jfsaaved.projects.core;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -28,6 +29,11 @@ public class Main implements ApplicationListener {
 	public static TextureAtlas imagesJumpForward;
 	public static TextureAtlas imagesJumpBackward;
 	public static TextureAtlas imagesPunch01;
+	public static TextureAtlas imagesPunch02;
+	public static TextureAtlas imagesKick01;
+
+	private int currentDelay = 0;
+	private int timer = 0;
 
 	@Override
 	public void create () {
@@ -40,6 +46,8 @@ public class Main implements ApplicationListener {
 		imagesJumpForward = new TextureAtlas("kim-f-jump.txt");
 		imagesJumpBackward = new TextureAtlas("kim-b-jump.txt");
 		imagesPunch01 = new TextureAtlas("kim-punch-01.txt");
+		imagesPunch02 = new TextureAtlas("kim-punch-02.txt");
+		imagesKick01 = new TextureAtlas("kim-kick-01.txt");
 		gameStateManager.push(new PlayState());
 	}
 
@@ -52,9 +60,26 @@ public class Main implements ApplicationListener {
 	public void render () {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		gameStateManager.update(Gdx.graphics.getDeltaTime());
+		adjustTime();
+		if(timer >= currentDelay) {
+			timer = 0;
+			gameStateManager.update(Gdx.graphics.getDeltaTime());
+		}
 		gameStateManager.render(spriteBatch);
 		gameStateManager.shapeRender(shapeRenderer);
+		timer++;
+	}
+
+	private void adjustTime() {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+			currentDelay++;
+		}
+		if(Gdx.input.isKeyJustPressed(Input.Keys.O)) {
+			currentDelay--;
+			if(currentDelay < 0) {
+				currentDelay = 0;
+			}
+		}
 	}
 
 	@Override

@@ -21,6 +21,8 @@ public class PlayState extends State{
         player.setJumpForwardSheet(Main.imagesJumpForward.findRegion("Kim"));
         player.setJumpBackwardSheet(Main.imagesJumpBackward.findRegion("Kim"));
         player.setPunch01Sheet(Main.imagesPunch01.findRegion("Kim"));
+        player.setPunch02Sheet(Main.imagesPunch02.findRegion("Kim"));
+        player.setKick01Sheet(Main.imagesKick01.findRegion("Kim"));
 
         rectangleEnemy = new RectangleEnemy((int) Main.WIDTH/2 + 100,
                 (int) Main.HEIGHT/2 + 500, 64, 112);
@@ -44,7 +46,7 @@ public class PlayState extends State{
     protected void shapeRender(ShapeRenderer shapeRenderer) {
         shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        //player.shapeRender(shapeRenderer);
+        player.shapeRender(shapeRenderer);
         rectangleEnemy.shapeRender(shapeRenderer);
         for(int i = 0; i < 4; i ++) {
             for(int j = 0; j < 4; j++) {
