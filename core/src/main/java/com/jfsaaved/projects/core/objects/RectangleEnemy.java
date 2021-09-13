@@ -14,9 +14,9 @@ public class RectangleEnemy {
     private static float MAX_JUMP_SPEED = 7f;
     private static float GRAVITY = -15f;
 
-    private final Vector2 position;
-    private final Vector2 velocity;
-    private final Rectangle rectangle;
+    public final Vector2 position;
+    public final Vector2 velocity;
+    public final Rectangle rectangle;
 
     private ObjectState objectState;
 
@@ -31,6 +31,8 @@ public class RectangleEnemy {
         velocity = new Vector2();
 
         rectangle = new Rectangle();
+        rectangle.x = x;
+        rectangle.y = y;
         rectangle.width = width;
         rectangle.height = height;
 
@@ -39,6 +41,11 @@ public class RectangleEnemy {
 
     public void update(float dt) {
         updateMovement(dt);
+        updateRectangle();
+    }
+
+    private void updateRectangle(){
+        rectangle.setPosition(position.x, position.y);
     }
 
     private void updateMovement(float dt) {

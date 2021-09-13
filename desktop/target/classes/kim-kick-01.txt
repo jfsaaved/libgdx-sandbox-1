@@ -1,0 +1,47 @@
+kim-kick-01.png
+size: 672, 112
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Kim
+  rotate: false
+  xy: 0, 0
+  size: 64, 112
+  orig: 64, 112
+  offset: 0, 0
+  index: 113
+Kim
+  rotate: false
+  xy: 112, 0
+  size: 80, 112
+  orig: 80, 112
+  offset: 0, 0
+  index: 114
+Kim
+  rotate: false
+  xy: 224, 0
+  size: 112, 112
+  orig: 112, 112
+  offset: 0, 0
+  index: 115
+Kim
+  rotate: false
+  xy: 336, 0
+  size: 112, 112
+  orig: 112, 112
+  offset: 0, 0
+  index: 116
+Kim
+  rotate: false
+  xy: 448, 0
+  size: 96, 112
+  orig: 96, 112
+  offset: 0, 0
+  index: 117
+Kim
+  rotate: false
+  xy: 560, 0
+  size: 80, 112
+  orig: 80, 112
+  offset: 0, 0
+  index: 121

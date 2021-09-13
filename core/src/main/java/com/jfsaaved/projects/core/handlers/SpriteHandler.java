@@ -12,7 +12,8 @@ public class SpriteHandler {
         JUMP_B_1, JUMP_B_2, JUMP_B_3, JUMP_B_4, JUMP_B_5,
         PUNCH_01_1, PUNCH_01_2,
         PUNCH_02_1, PUNCH_02_2, PUNCH_02_3, PUNCH_02_4,
-        KICK_01_1, KICK_01_2, KICK_01_3, KICK_01_4, KICK_01_5, KICK_01_6
+        KICK_01_1, KICK_01_2, KICK_01_3, KICK_01_4, KICK_01_5, KICK_01_6,
+        KICK_02_1, KICK_02_2, KICK_02_3, KICK_02_4, KICK_02_5, KICK_02_6
     }
 
     private Sprite[] standingSprite;
@@ -25,6 +26,7 @@ public class SpriteHandler {
     private Sprite[] punch01Sprite;
     private Sprite[] punch02Sprite;
     private Sprite[] kick01Sprite;
+    private Sprite[] kick02Sprite;
 
     private int currentFrame;
     protected int currentDelay;
@@ -104,6 +106,13 @@ public class SpriteHandler {
         return this;
     }
 
+    public SpriteHandler handleKick02Sprite(TextureRegion textureRegion, int width, int height, int frames) {
+        kick02Sprite = new Sprite[frames];
+        for(int col = 0; col < frames; col++)
+            kick02Sprite[col] = new Sprite(textureRegion, width * (col), 0, width, height);
+        return this;
+    }
+
     public SpriteHandler handleTestAttackSprite(TextureRegion textureRegion, int width, int height, int frames) {
         textAttackSprite = new Sprite[frames];
         for(int col = 0; col < frames; col++)
@@ -148,6 +157,13 @@ public class SpriteHandler {
         else if(animationState == AnimationState.KICK_01_4) activeSprite = kick01Sprite;
         else if(animationState == AnimationState.KICK_01_5) activeSprite = kick01Sprite;
         else if(animationState == AnimationState.KICK_01_6) activeSprite = kick01Sprite;
+
+        else if(animationState == AnimationState.KICK_02_1) activeSprite = kick02Sprite;
+        else if(animationState == AnimationState.KICK_02_2) activeSprite = kick02Sprite;
+        else if(animationState == AnimationState.KICK_02_3) activeSprite = kick02Sprite;
+        else if(animationState == AnimationState.KICK_02_4) activeSprite = kick02Sprite;
+        else if(animationState == AnimationState.KICK_02_5) activeSprite = kick02Sprite;
+        else if(animationState == AnimationState.KICK_02_6) activeSprite = kick02Sprite;
     }
 
     public AnimationState getAnimationState(){
@@ -217,6 +233,14 @@ public class SpriteHandler {
         if(animationState == AnimationState.KICK_01_4) currentFrame = 3;
         if(animationState == AnimationState.KICK_01_5) currentFrame = 4;
         if(animationState == AnimationState.KICK_01_6) currentFrame = 5;
+
+        // Kick 02
+        if(animationState == AnimationState.KICK_02_1) currentFrame = 0;
+        if(animationState == AnimationState.KICK_02_2) currentFrame = 1;
+        if(animationState == AnimationState.KICK_02_3) currentFrame = 2;
+        if(animationState == AnimationState.KICK_02_4) currentFrame = 3;
+        if(animationState == AnimationState.KICK_02_5) currentFrame = 4;
+        if(animationState == AnimationState.KICK_02_6) currentFrame = 5;
 
         activeSprite[currentFrame].setFlip(flip, false);
     }

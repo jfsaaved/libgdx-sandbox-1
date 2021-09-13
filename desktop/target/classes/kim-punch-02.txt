@@ -1,0 +1,33 @@
+kim-punch-02.png
+size: 520, 114
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Kim
+  rotate: false
+  xy: 1, 1
+  size: 80, 112
+  orig: 80, 112
+  offset: 0, 0
+  index: 104
+Kim
+  rotate: false
+  xy: 131, 1
+  size: 80, 96
+  orig: 80, 96
+  offset: 0, 0
+  index: 105
+Kim
+  rotate: false
+  xy: 261, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: 106
+Kim
+  rotate: false
+  xy: 391, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: 107

@@ -31,6 +31,7 @@ public class Main implements ApplicationListener {
 	public static TextureAtlas imagesPunch01;
 	public static TextureAtlas imagesPunch02;
 	public static TextureAtlas imagesKick01;
+	public static TextureAtlas imagesKick02;
 
 	private int currentDelay = 0;
 	private int timer = 0;
@@ -48,6 +49,7 @@ public class Main implements ApplicationListener {
 		imagesPunch01 = new TextureAtlas("kim-punch-01.txt");
 		imagesPunch02 = new TextureAtlas("kim-punch-02.txt");
 		imagesKick01 = new TextureAtlas("kim-kick-01.txt");
+		imagesKick02 = new TextureAtlas("kim-kick-02.txt");
 		gameStateManager.push(new PlayState());
 	}
 
